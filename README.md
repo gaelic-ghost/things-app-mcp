@@ -145,8 +145,8 @@ make call TOOL=things_read_headings ARGS_JSON='{"project_id":"PROJECT_ID","query
 - `things_validate_token_config`: verify update-token configuration state.
 - `things_capabilities`: list currently implemented capabilities.
 
-See route coverage matrix: [docs/things-route-matrix.md](/Users/galew/Workspace/things-app-mcp/docs/things-route-matrix.md)
-Practical command examples: [docs/examples.md](/Users/galew/Workspace/things-app-mcp/docs/examples.md)
+See route coverage matrix: [docs/things-route-matrix.md](docs/things-route-matrix.md)
+Practical command examples: [docs/examples.md](docs/examples.md)
 
 `things_import_json` includes lightweight shape validation before dispatch:
 
