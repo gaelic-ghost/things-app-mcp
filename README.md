@@ -59,6 +59,9 @@ make call TOOL=things_add_todo ARGS_JSON='{"title":"Example task","notes":"From 
 make call TOOL=things_update_project ARGS_JSON='{"id":"PROJECT_ID","title":"New title","auth_token":"TOKEN"}'
 make call TOOL=things_import_json ARGS_JSON='{"data":[{"type":"to-do","attributes":{"title":"From JSON"}}]}'
 make test
+make lint
+make typecheck
+make check
 make smoke-http
 make smoke-json
 make smoke-read
@@ -195,5 +198,6 @@ Common normalized error codes:
 ```bash
 uv sync
 uv run pytest
+uv run ruff check .
+uv run mypy .
 ```
-

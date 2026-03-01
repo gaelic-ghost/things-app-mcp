@@ -249,6 +249,7 @@ def import_json_payload(
 
     _validate_import_json_shape(parsed_data)
 
+    resolved_token: str | None
     if _contains_update_operation(parsed_data):
         resolved_token = _resolve_auth_token(auth_token)
     else:

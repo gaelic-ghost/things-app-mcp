@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from urllib.request import urlopen
+
 import pytest
 
-from app.things_client import CallbackResult, ThingsClientError, ThingsUrlClient
+from app.things_client import CallbackResult, CallbackServer, ThingsClientError, ThingsUrlClient
 
 
 class FakeCallbackServer:
@@ -90,3 +92,25 @@ def test_execute_redacts_auth_token_in_returned_url() -> None:
     assert response["url"].startswith("things:///update?")
     assert "auth-token=%2A%2A%2AREDACTED%2A%2A%2A" in response["url"]
     assert "secret-token" not in response["url"]
+
+
+def test_callback_server_parses_success_query_params() -> None:
+    with CallbackServer(timeout_seconds=1.0) as callback_server:
+        with urlopen(f"{callback_server.success_url}?version=3.21.8&build=1234") as response:
+            assert response.status == 200
+
+        result = callback_server.wait()
+
+    assert result.status == "success"
+    assert result.params == {"version": "3.21.8", "build": "1234"}
+
+
+def test_callback_server_parses_error_query_params() -> None:
+    with CallbackServer(timeout_seconds=1.0) as callback_server:
+        with urlopen(f"{callback_server.error_url}?errorMessage=bad+command") as response:
+            assert response.status == 200
+
+        result = callback_server.wait()
+
+    assert result.status == "error"
+    assert result.params == {"errorMessage": "bad command"}

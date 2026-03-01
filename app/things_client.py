@@ -3,11 +3,10 @@ from __future__ import annotations
 import os
 import subprocess
 import threading
-import time
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Callable
-from urllib.parse import parse_qsl, urlencode
+from urllib.parse import parse_qs, parse_qsl, urlencode, urlparse
 
 
 THINGS_URL_PREFIX = "things:///"
@@ -174,15 +173,6 @@ def ensure_update_payload_has_changes(payload: dict[str, Any], *, ignored_keys: 
         if value is not None:
             return
     raise ThingsValidationError("At least one field must be provided to update")
-
-
-def auth_token_or_raise(explicit_token: str | None, env_value: str | None) -> str:
-    token = explicit_token or env_value
-    if not token:
-        raise ThingsValidationError(
-            "'auth_token' is required for update commands. Set THINGS_AUTH_TOKEN or pass auth_token."
-        )
-    return token
 
 
 def _is_truthy(value: str | None) -> bool:
