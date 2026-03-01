@@ -5,7 +5,7 @@ PORT ?= 8123
 MCP_URL ?= http://$(HOST):$(PORT)/mcp
 SERVER_SPEC ?= app/server.py
 
-.PHONY: help inspect run-http list-http call-health call test smoke-http smoke-json smoke-read
+.PHONY: help inspect run-http list-http call-health call test lint typecheck check smoke-http smoke-json smoke-read
 
 TOOL ?= health
 ARGS_JSON ?=
@@ -18,6 +18,9 @@ help:
 	@echo "  make call-health [MCP_URL=http://127.0.0.1:8123/mcp]"
 	@echo "  make call TOOL=things_capabilities [ARGS_JSON='{"id":"abc"}'] [MCP_URL=http://127.0.0.1:8123/mcp]"
 	@echo "  make test"
+	@echo "  make lint"
+	@echo "  make typecheck"
+	@echo "  make check"
 	@echo "  make smoke-http"
 	@echo "  make smoke-json"
 	@echo "  make smoke-read"
@@ -39,6 +42,14 @@ call:
 
 test:
 	@./scripts/local_fastmcp.sh test
+
+lint:
+	@uv run ruff check .
+
+typecheck:
+	@uv run mypy .
+
+check: test lint typecheck
 
 smoke-http:
 	@HOST=$(HOST) PORT=$(PORT) MCP_URL=$(MCP_URL) SERVER_SPEC=$(SERVER_SPEC) ./scripts/local_fastmcp.sh smoke-http
